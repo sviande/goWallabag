@@ -55,3 +55,58 @@ type Entry struct {
 }
 
 type EntriesRequest url.Values
+
+func parseEntries(reader io.Reader) (EntriesResponse, error) {
+	entries := EntriesResponse{}
+	err := json.NewDecoder(reader).Decode(&entries)
+
+	if err != nil {
+		return EntriesResponse{}, err
+	}
+
+	return entries, nil
+}
+
+func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
+
+	params := url.Values{}
+	for _, opt := range options {
+		opt(&params)
+	}
+
+	entriesURL := "api/entries.json"
+
+	fullURL := w.URL + entriesURL + "?" + params.Encode()
+
+	return fullURL
+}
+
+func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
+	entriesRequest, err := http.NewRequest(
+		http.MethodGet,
+		fullURL,
+		nil,
+	)
+
+	resp, err := w.Do(entriesRequest)
+
+	if err != nil {
+		return EntriesResponse{}, errors.Wrap(err, "Entries error durring get")
+	}
+
+	defer resp.Body.Close()
+	decoder := json.NewDecoder(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		errorResponse := ErrorResponse{}
+		err = decoder.Decode(&errorResponse)
+
+		return EntriesResponse{}, errors.Errorf(
+			"Entries: return status code: %v with message:\n %v",
+			resp.StatusCode,
+			errorResponse,
+		)
+	}
+
+	return parseEntries(resp.Body)
+}
