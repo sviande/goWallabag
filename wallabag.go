@@ -25,7 +25,18 @@ func (w Wallabag) Do(r *http.Request) (*http.Response, error) {
 	}
 
 	r.Header.Set("Authorization", header)
-	return w.Client.Do(r)
+
+	resp, err := w.Client.Do(r)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "Error durring request")
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, w.ParseError(resp.StatusCode, resp.Body)
+	}
+
+	return resp, nil
 }
 
 func (w Wallabag) ParseError(statusCode int, readCloser io.ReadCloser) error {
