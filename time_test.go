@@ -15,4 +15,11 @@ func TestTimeUnmarshalJSON(t *testing.T) {
 	if !got.Equal(expected) {
 		t.Errorf("Time got : %v expected : %v", got, expected)
 	}
+
+	got = Time{}
+	err := json.Unmarshal([]byte("2006"), &got)
+	if err == nil {
+		t.Error(err)
+		t.Errorf("Time bad format error expected")
+	}
 }
