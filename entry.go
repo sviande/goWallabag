@@ -91,21 +91,7 @@ func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
 	resp, err := w.Do(entriesRequest)
 
 	if err != nil {
-		return EntriesResponse{}, errors.Wrap(err, "Entries error durring get")
-	}
-
-	defer resp.Body.Close()
-	decoder := json.NewDecoder(resp.Body)
-
-	if resp.StatusCode != http.StatusOK {
-		errorResponse := ErrorResponse{}
-		err = decoder.Decode(&errorResponse)
-
-		return EntriesResponse{}, errors.Errorf(
-			"Entries: return status code: %v with message:\n %v",
-			resp.StatusCode,
-			errorResponse,
-		)
+		return EntriesResponse{}, errors.Wrap(err, "Failed to retrieve response")
 	}
 
 	return parseEntries(resp.Body)
