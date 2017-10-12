@@ -63,25 +63,14 @@ func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
 		return errors.Wrap(err, "Auth Failed from http")
 	}
 
-	defer resp.Body.Close()
-
-	decoder := json.NewDecoder(resp.Body)
 	if resp.StatusCode != http.StatusOK {
-		errorResponse := ErrorResponse{}
-		err = decoder.Decode(&errorResponse)
-
-		if err != nil {
-			return errors.Wrap(err, "Auth: Failed to parse error response")
-		}
-
-		return errors.Errorf(
-			"Auth: return status code: %v with message:\n %v",
-			resp.StatusCode,
-			errorResponse,
-		)
+		return w.ParseError(resp.StatusCode, resp.Body)
 	}
 
+	defer resp.Body.Close()
 	w.auth = AuthResponse{}
+
+	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&w.auth)
 
 	if err != nil {
