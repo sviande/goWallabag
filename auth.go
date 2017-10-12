@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+var errTokenType = errors.New("Impossible to create header no token type")
+var errAccesToken = errors.New("Impossible to create header no access token")
+
 type AuthRequest struct {
 	GrantType    string
 	ClientID     string
@@ -35,12 +38,20 @@ type AuthResponse struct {
 	TokenType    string `json:"token_type"`
 }
 
-func (a AuthResponse) GetHeader() string {
+func (a AuthResponse) GetHeader() (string, error) {
+	if a.TokenType == "" {
+		return "", errTokenType
+	}
+
+	if a.AccessToken == "" {
+		return "", errAccesToken
+	}
+
 	token := strings.ToUpper(string(a.TokenType[0]))
 	token += a.TokenType[1:len(a.TokenType)]
 	token += " " + a.AccessToken
 
-	return token
+	return token, nil
 }
 
 func AuthQuery(w *Wallabag, authRequest AuthRequest) error {

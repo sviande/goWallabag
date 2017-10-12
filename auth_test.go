@@ -30,13 +30,27 @@ func TestGetUrlValues(t *testing.T) {
 }
 
 func TestGetHeader(t *testing.T) {
-	authResponse := AuthResponse{
-		TokenType:   "bearer",
-		AccessToken: "123456",
+	var err error
+
+	authResponse := AuthResponse{}
+
+	_, err = authResponse.GetHeader()
+	if err != errTokenType {
+		t.Error("Failed for auth GetHeader expected errTokenType")
+		return
 	}
 
+	authResponse.TokenType = "bearer"
+	_, err = authResponse.GetHeader()
+	if err != errAccesToken {
+		t.Error("Failed for auth GetHeader expected errAccessToken")
+		return
+	}
+
+	authResponse.AccessToken = "123456"
+
 	expected := "Bearer 123456"
-	got := authResponse.GetHeader()
+	got, _ := authResponse.GetHeader()
 	if expected != got {
 		t.Errorf("Failed for auth GetHeader expected %v got %v", expected, got)
 	}
