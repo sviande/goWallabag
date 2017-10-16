@@ -8,6 +8,8 @@ import (
 	"net/url"
 )
 
+const entryGetAllPathURL = "api/entries.json"
+
 type EntriesResponse struct {
 	Page     int
 	Limit    int
@@ -74,9 +76,7 @@ func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
 		opt(&params)
 	}
 
-	entriesURL := "api/entries.json"
-
-	fullURL := w.URL + entriesURL + "?" + params.Encode()
+	fullURL := w.URL + entryGetAllPathURL + "?" + params.Encode()
 
 	return fullURL
 }
