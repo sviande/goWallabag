@@ -10,6 +10,7 @@ import (
 
 var errTokenType = errors.New("Impossible to create header no token type")
 var errAccesToken = errors.New("Impossible to create header no access token")
+const authPathURL =  "oauth/v2/token"
 
 type AuthRequest struct {
 	GrantType    string
@@ -55,9 +56,8 @@ func (a AuthResponse) GetHeader() (string, error) {
 }
 
 func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
-	authURL := "oauth/v2/token"
 
-	resp, err := w.Client.PostForm(w.URL+authURL, authRequest.GetUrlValues())
+	resp, err := w.Client.PostForm(w.URL+authPathURL, authRequest.GetUrlValues())
 
 	if err != nil {
 		return errors.Wrap(err, "Auth Failed from http")
