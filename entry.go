@@ -94,5 +94,7 @@ func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
 		return EntriesResponse{}, errors.Wrap(err, "Failed to retrieve response")
 	}
 
+	defer resp.Body.Close()
+
 	return parseEntries(resp.Body)
 }
