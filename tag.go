@@ -5,3 +5,5 @@ type Tag struct {
 	Label string `json:"label"`
 	Slug  string `json:"slug"`
 }
+
+type TagList []Tag
