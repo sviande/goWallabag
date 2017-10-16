@@ -40,7 +40,7 @@ type Entry struct {
 	UserName    string   `json:"user_name"`
 	UserEmail   string   `json:"user_email"`
 	UserID      int      `json:"user_id"`
-	Tags        []Tags   `json:"tags"`
+	Tags        []Tag    `json:"tags"`
 	ID          int      `json:"id"`
 	Title       string   `json:"title"`
 	URL         string   `json:"url"`

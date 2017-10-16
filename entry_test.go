@@ -63,8 +63,8 @@ func getWanted() EntriesResponse {
 					UserName:   "example",
 					UserEmail:  "example@gmail.com",
 					UserID:     1,
-					Tags: []Tags{
-						Tags{
+					Tags: []Tag{
+						Tag{
 							ID:    3,
 							Label: "Code",
 							Slug:  "code",
@@ -93,7 +93,7 @@ func getWanted() EntriesResponse {
 					UserName:    "example",
 					UserEmail:   "example@gmail.com",
 					UserID:      1,
-					Tags:        []Tags{},
+					Tags:        []Tag{},
 					ID:          1787,
 					Title:       "Le demi-cercle (épisode 2 — Voir / Avancer)",
 					URL:         "https://blog.octo.com/le-demi-cercle-episode-2-voir-avancer/",
