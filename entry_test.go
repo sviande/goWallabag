@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestParse(t *testing.T) {
+func TestParseEntries(t *testing.T) {
 	file := "test/entries.json"
 	in, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -22,14 +22,14 @@ func TestParse(t *testing.T) {
 		return
 	}
 
-	want := getWanted()
+	want := getWantedEntriesResponse()
 
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("Parse() got \n%q, want\n%q", got, want)
 	}
 }
 
-func getWanted() EntriesResponse {
+func getWantedEntriesResponse() EntriesResponse {
 	createdAt0, _ := time.Parse(TimeFormat, "2017-09-18T10:45:58+0200")
 	updatedAt0, _ := time.Parse(TimeFormat, "2017-09-18T18:55:26+0200")
 
