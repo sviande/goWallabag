@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -26,29 +27,36 @@ func TestParseTags(t *testing.T) {
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("Parse() got \n%q, want\n%q", got, want)
 	}
+
+	got, err = parseTagList(strings.NewReader("asd"))
+
+	if err == nil {
+		t.Errorf("err %s", err)
+		return
+	}
 }
 
 func getWantedTag() TagList {
 	return TagList{
 		Tag{
-			ID: 8,
+			ID:    8,
 			Label: "Agile",
-			Slug: "agile",
+			Slug:  "agile",
 		},
 		Tag{
-			ID: 32,
+			ID:    32,
 			Label: "Best practices",
-			Slug: "best-practices",
+			Slug:  "best-practices",
 		},
 		Tag{
-			ID: 27,
+			ID:    27,
 			Label: "Sécurité",
-			Slug: "securite",
+			Slug:  "securite",
 		},
 		Tag{
-			ID: 13,
+			ID:    13,
 			Label: "Web Perf",
-			Slug: "web-perf",
+			Slug:  "web-perf",
 		},
 	}
 }
