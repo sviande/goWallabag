@@ -10,7 +10,8 @@ import (
 
 var errTokenType = errors.New("Impossible to create header no token type")
 var errAccesToken = errors.New("Impossible to create header no access token")
-const authPathURL =  "oauth/v2/token"
+
+const authPathURL = "oauth/v2/token"
 
 type AuthRequest struct {
 	GrantType    string
@@ -20,7 +21,7 @@ type AuthRequest struct {
 	Password     string
 }
 
-func (r AuthRequest) GetUrlValues() url.Values {
+func (r AuthRequest) GetURLValues() url.Values {
 	urlValues := url.Values{}
 	urlValues.Set("grant_type", r.GrantType)
 	urlValues.Set("client_id", r.ClientID)
@@ -57,7 +58,7 @@ func (a AuthResponse) GetHeader() (string, error) {
 
 func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
 
-	resp, err := w.Client.PostForm(w.URL+authPathURL, authRequest.GetUrlValues())
+	resp, err := w.Client.PostForm(w.URL+authPathURL, authRequest.GetURLValues())
 
 	if err != nil {
 		return errors.Wrap(err, "Auth Failed from http")
@@ -67,7 +68,8 @@ func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
 		return w.ParseError(resp.StatusCode, resp.Body)
 	}
 
-	defer resp.Body.Close()
+	defer deferClose(resp.Body)
+
 	w.auth = AuthResponse{}
 
 	decoder := json.NewDecoder(resp.Body)

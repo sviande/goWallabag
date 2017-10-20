@@ -22,7 +22,7 @@ func TestGetUrlValues(t *testing.T) {
 	authR.Username = "Username"
 	authR.Password = "Password"
 
-	got := authR.GetUrlValues()
+	got := authR.GetURLValues()
 
 	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("Failed for getUrlValues expected %v got %v", expected, got)

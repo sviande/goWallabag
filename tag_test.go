@@ -28,7 +28,7 @@ func TestParseTags(t *testing.T) {
 		t.Errorf("Parse() got \n%q, want\n%q", got, want)
 	}
 
-	got, err = parseTagList(strings.NewReader("asd"))
+	_, err = parseTagList(strings.NewReader("asd"))
 
 	if err == nil {
 		t.Errorf("err %s", err)

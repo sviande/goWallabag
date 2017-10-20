@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -40,7 +41,7 @@ func (w Wallabag) Do(r *http.Request) (*http.Response, error) {
 }
 
 func (w Wallabag) ParseError(statusCode int, readCloser io.ReadCloser) error {
-	defer readCloser.Close()
+	defer deferClose(readCloser)
 
 	errorResponse := ErrorResponse{}
 	err := json.NewDecoder(readCloser).Decode(&errorResponse)
@@ -54,4 +55,11 @@ func (w Wallabag) ParseError(statusCode int, readCloser io.ReadCloser) error {
 		statusCode,
 		errorResponse,
 	)
+}
+
+func deferClose(c io.Closer) {
+	err := c.Close()
+	if err != nil {
+		log.Println(errors.Wrap(err, "Failed to close a resourcer"))
+	}
 }

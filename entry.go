@@ -88,13 +88,17 @@ func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
 		nil,
 	)
 
+	if err != nil {
+		return EntriesResponse{}, errors.New("Failed to create request")
+	}
+
 	resp, err := w.Do(entriesRequest)
 
 	if err != nil {
 		return EntriesResponse{}, errors.Wrap(err, "Failed to retrieve response")
 	}
 
-	defer resp.Body.Close()
+	defer deferClose(resp.Body)
 
 	return parseEntries(resp.Body)
 }

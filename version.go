@@ -13,11 +13,7 @@ func parseVersion(reader io.Reader) (string, error) {
 	version := ""
 	err := json.NewDecoder(reader).Decode(&version)
 
-	if err != nil {
-		return version, err
-	}
-
-	return version, nil
+	return version, err
 }
 
 func GetVersion(w Wallabag) (string, error) {
@@ -38,7 +34,10 @@ func GetVersion(w Wallabag) (string, error) {
 		return "", errors.Wrap(err, "Version error during get")
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	return parseVersion(resp.Body)
+
 }

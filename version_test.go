@@ -20,7 +20,7 @@ func TestParseVersion(t *testing.T) {
 		t.Errorf("Parse() got \n%q, want\n%q", got, want)
 	}
 
-	got, err = parseVersion(strings.NewReader("2.3.3"))
+	_, err = parseVersion(strings.NewReader("2.3.3"))
 
 	if err == nil {
 		t.Errorf("err %s", err)

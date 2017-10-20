@@ -10,14 +10,14 @@ type Time struct {
 	time.Time
 }
 
-func (self *Time) UnmarshalJSON(b []byte) error {
-	s := string(b)
-	s = s[1 : len(s)-1]
+func (t *Time) UnmarshalJSON(timeByte []byte) error {
+	timeStr := string(timeByte)
+	timeStr = timeStr[1 : len(timeStr)-1]
 
-	t, err := time.Parse(TimeFormat, s)
+	newTime, err := time.Parse(TimeFormat, timeStr)
 	if err != nil {
 		return err
 	}
-	self.Time = t
+	t.Time = newTime
 	return nil
 }

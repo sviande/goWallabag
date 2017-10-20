@@ -35,6 +35,10 @@ func GetTagList(w Wallabag) (TagList, error) {
 		nil,
 	)
 
+	if err != nil {
+		return TagList{}, errors.New("Failed to create request")
+	}
+
 	resp, err := w.Do(tagRequest)
 
 	if err != nil {
