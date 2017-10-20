@@ -3,10 +3,22 @@ package goWallabag
 import (
 	"encoding/json"
 	"github.com/pkg/errors"
+	"io"
 	"net/http"
 )
 
 const versionPathURL = "api/version.json"
+
+func parseVersion(reader io.Reader) (string, error) {
+	version := ""
+	err := json.NewDecoder(reader).Decode(&version)
+
+	if err != nil {
+		return version, err
+	}
+
+	return version, nil
+}
 
 func GetVersion(w Wallabag) (string, error) {
 	versionRequest, err := http.NewRequest(
@@ -28,12 +40,5 @@ func GetVersion(w Wallabag) (string, error) {
 
 	defer resp.Body.Close()
 
-	version := ""
-	err = json.NewDecoder(resp.Body).Decode(&version)
-
-	if err != nil {
-		return "", err
-	}
-
-	return version, nil
+	return parseVersion(resp.Body)
 }
