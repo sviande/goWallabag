@@ -35,9 +35,7 @@ func GetVersion(w Wallabag) (string, error) {
 		return "", errors.Wrap(err, "Version error during get")
 	}
 
-	defer func() {
-		_ = resp.Body.Close()
-	}()
+	defer deferClose(resp.Body)
 
 	return parseVersion(resp.Body)
 
