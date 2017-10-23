@@ -16,20 +16,19 @@ func parseVersion(reader io.Reader) (string, error) {
 	return version, err
 }
 
-//GetVersion fetch version API
-func GetVersion(w Wallabag) (string, error) {
-	versionRequest, err := http.NewRequest(
+//VersionRequest generate http.Request for fetching version from API
+func VersionRequest(w Wallabag) (*http.Request, error) {
+	return http.NewRequest(
 		http.MethodGet,
 		w.URL+versionPathURL,
 		nil,
 	)
+}
 
-	if err != nil {
-		return "", errors.Wrap(err, "Version error during get request creation")
-	}
-
+//VersionFetch fetch version API
+func VersionFetch(w Wallabag, versionRequest *http.Request) (string, error) {
 	var resp *http.Response
-	resp, err = w.Do(versionRequest)
+	resp, err := w.Do(versionRequest)
 
 	if err != nil {
 		return "", errors.Wrap(err, "Version error during get")
@@ -38,5 +37,4 @@ func GetVersion(w Wallabag) (string, error) {
 	defer deferClose(resp.Body)
 
 	return parseVersion(resp.Body)
-
 }
