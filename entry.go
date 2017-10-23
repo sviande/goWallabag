@@ -10,6 +10,8 @@ import (
 
 const entryGetAllPathURL = "api/entries.json"
 
+//EntriesResponse represent struct for wallabag response
+//Response with pagination
 type EntriesResponse struct {
 	Page     int
 	Limit    int
@@ -19,10 +21,12 @@ type EntriesResponse struct {
 	Embedded Embedded `json:"_embedded"`
 }
 
+//Embedded represent array of Entry in wallabag response
 type Embedded struct {
 	Entries []Entry `json:"items"`
 }
 
+//Links List of link for pagination discovery
 type Links struct {
 	Self  Link `json:"self"`
 	Last  Link `json:"last"`
@@ -30,10 +34,12 @@ type Links struct {
 	Next  Link `json:"next"`
 }
 
+//Link represent link for content discovery in EntriesResponse
 type Link struct {
 	Href string `json:"href"`
 }
 
+//Entry represent a Wallabag entry
 type Entry struct {
 	IsArchived  int      `json:"is_archived"`
 	IsStarred   int      `json:"is_starred"`
@@ -56,6 +62,7 @@ type Entry struct {
 	Links       Links    `json:"_links"`
 }
 
+//EntriesRequest represent query var for request
 type EntriesRequest url.Values
 
 func parseEntries(reader io.Reader) (EntriesResponse, error) {
@@ -69,6 +76,7 @@ func parseEntries(reader io.Reader) (EntriesResponse, error) {
 	return entries, nil
 }
 
+//EntriesGetURL return url for get Entries with query
 func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
 
 	params := url.Values{}
@@ -81,6 +89,7 @@ func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
 	return fullURL
 }
 
+//EntriesFromURL fetch all entries from url
 func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
 	entriesRequest, err := http.NewRequest(
 		http.MethodGet,
