@@ -13,6 +13,7 @@ var errAccesToken = errors.New("Impossible to create header no access token")
 
 const authPathURL = "oauth/v2/token"
 
+//AuthRequest reprensent an auth request
 type AuthRequest struct {
 	GrantType    string
 	ClientID     string
@@ -21,6 +22,7 @@ type AuthRequest struct {
 	Password     string
 }
 
+//GetURLValues Return url.Values required for auth
 func (r AuthRequest) GetURLValues() url.Values {
 	urlValues := url.Values{}
 	urlValues.Set("grant_type", r.GrantType)
@@ -32,6 +34,7 @@ func (r AuthRequest) GetURLValues() url.Values {
 	return urlValues
 }
 
+//AuthResponse represent auth response
 type AuthResponse struct {
 	AccessToken  string `json:"access_token"`
 	ExpiresIn    int    `json:"expires_in"`
@@ -40,6 +43,7 @@ type AuthResponse struct {
 	TokenType    string `json:"token_type"`
 }
 
+//GetHeader return header for next request
 func (a AuthResponse) GetHeader() (string, error) {
 	if a.TokenType == "" {
 		return "", errTokenType
@@ -56,6 +60,7 @@ func (a AuthResponse) GetHeader() (string, error) {
 	return token, nil
 }
 
+//AuthQuery query wallabag backend for an auth token
 func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
 
 	resp, err := w.Client.PostForm(w.URL+authPathURL, authRequest.GetURLValues())
