@@ -44,6 +44,8 @@ func GetTagList(w Wallabag) (TagList, error) {
 
 	resp, err := w.Do(tagRequest)
 
+	defer deferClose(resp.Body)
+
 	if err != nil {
 		return TagList{}, errors.Wrap(err, "Failed to retrieve response")
 	}
