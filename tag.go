@@ -7,12 +7,14 @@ import (
 	"net/http"
 )
 
+//Tag struct represent a wallabag tag
 type Tag struct {
 	ID    int    `json:"id"`
 	Label string `json:"label"`
 	Slug  string `json:"slug"`
 }
 
+//TagList reprensent a array of Tag
 type TagList []Tag
 
 const tagsPathURL = "api/tags.json"
@@ -28,6 +30,7 @@ func parseTagList(reader io.Reader) (TagList, error) {
 	return tagList, nil
 }
 
+//GetTagList fetch tag list from API
 func GetTagList(w Wallabag) (TagList, error) {
 	tagRequest, err := http.NewRequest(
 		http.MethodGet,
