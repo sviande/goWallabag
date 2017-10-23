@@ -8,12 +8,14 @@ import (
 	"net/http"
 )
 
+//Wallabag struct use for save authResponse, API URL and httpClient
 type Wallabag struct {
 	Client http.Client
 	URL    string
 	auth   AuthResponse
 }
 
+//Do func use for execute a request on API, need authResponse for token generation
 func (w Wallabag) Do(r *http.Request) (*http.Response, error) {
 	if (w.auth == AuthResponse{}) {
 		return nil, errors.New("No auth token please run AuthQuery before")
@@ -40,6 +42,7 @@ func (w Wallabag) Do(r *http.Request) (*http.Response, error) {
 	return resp, nil
 }
 
+//ParseError func use for parsing error from API
 func (w Wallabag) ParseError(statusCode int, readCloser io.ReadCloser) error {
 	defer deferClose(readCloser)
 
