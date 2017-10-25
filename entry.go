@@ -65,7 +65,10 @@ type Entry struct {
 //EntriesRequest represent query var for request
 type EntriesRequest url.Values
 
-func parseEntries(reader io.Reader) (EntriesResponse, error) {
+//EntryListParser function interface for parsing API response
+type EntryListParser func(io.Reader) (EntriesResponse, error)
+
+func EntryListParse(reader io.Reader) (EntriesResponse, error) {
 	entries := EntriesResponse{}
 	err := json.NewDecoder(reader).Decode(&entries)
 
@@ -89,25 +92,28 @@ func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
 	return fullURL
 }
 
-//EntriesFromURL fetch all entries from url
-func EntriesFromURL(w Wallabag, fullURL string) (EntriesResponse, error) {
-	entriesRequest, err := http.NewRequest(
+//EntriesListRequest create an http request for fetching entries from API
+func EntriesListRequest(w Wallabag, fullURL string) (*http.Request, error) {
+	return http.NewRequest(
 		http.MethodGet,
 		fullURL,
 		nil,
 	)
+}
+
+//EntriesFromURL fetch all entries from url
+func EntriesFromURL(
+	w Wallabag,
+	entryListRequest *http.Request,
+	parser EntryListParser,
+) (EntriesResponse, error) {
+	resp, err := w.Do(entryListRequest)
 
 	if err != nil {
-		return EntriesResponse{}, errors.New("Failed to create request")
-	}
-
-	resp, err := w.Do(entriesRequest)
-
-	if err != nil {
-		return EntriesResponse{}, errors.Wrap(err, "Failed to retrieve response")
+		return EntriesResponse{}, errors.Wrap(err, "Failed to retrieve entries")
 	}
 
 	defer deferClose(resp.Body)
 
-	return parseEntries(resp.Body)
+	return parser(resp.Body)
 }

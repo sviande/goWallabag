@@ -16,7 +16,7 @@ func TestParseEntries(t *testing.T) {
 		return
 	}
 
-	got, err := parseEntries(bytes.NewReader(in))
+	got, err := EntryListParse(bytes.NewReader(in))
 	if err != nil {
 		t.Errorf("err %s", err)
 		return
