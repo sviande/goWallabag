@@ -31,7 +31,7 @@ func parseTagList(reader io.Reader) (TagList, error) {
 }
 
 //GetTagList fetch tag list from API
-func GetTagList(w Wallabag) (TagList, error) {
+func GetTagList(w WallabagClient) (TagList, error) {
 	tagRequest, err := http.NewRequest(
 		http.MethodGet,
 		w.URL+tagsPathURL,

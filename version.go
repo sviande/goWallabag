@@ -17,7 +17,7 @@ func parseVersion(reader io.Reader) (string, error) {
 }
 
 //VersionRequest generate http.Request for fetching version from API
-func VersionRequest(w Wallabag) (*http.Request, error) {
+func VersionRequest(w WallabagClient) (*http.Request, error) {
 	return http.NewRequest(
 		http.MethodGet,
 		w.URL+versionPathURL,
@@ -26,7 +26,7 @@ func VersionRequest(w Wallabag) (*http.Request, error) {
 }
 
 //VersionFetch fetch version API
-func VersionFetch(w Wallabag, versionRequest *http.Request) (string, error) {
+func VersionFetch(w WallabagClient, versionRequest *http.Request) (string, error) {
 	var resp *http.Response
 	resp, err := w.Do(versionRequest)
 

@@ -68,7 +68,8 @@ type EntriesRequest url.Values
 //EntryListParser function interface for parsing API response
 type EntryListParser func(io.Reader) (EntriesResponse, error)
 
-func EntryListParse(reader io.Reader) (EntriesResponse, error) {
+//EntryListDefaultParser parse Entries response from io.Reader
+func EntryListDefaultParser(reader io.Reader) (EntriesResponse, error) {
 	entries := EntriesResponse{}
 	err := json.NewDecoder(reader).Decode(&entries)
 
@@ -80,7 +81,7 @@ func EntryListParse(reader io.Reader) (EntriesResponse, error) {
 }
 
 //EntriesGetURL return url for get Entries with query
-func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
+func EntriesGetURL(w WallabagClient, options ...ParamsSetter) string {
 
 	params := url.Values{}
 	for _, opt := range options {
@@ -93,7 +94,7 @@ func EntriesGetURL(w Wallabag, options ...ParamsSetter) string {
 }
 
 //EntriesListRequest create an http request for fetching entries from API
-func EntriesListRequest(w Wallabag, fullURL string) (*http.Request, error) {
+func EntriesListRequest(w WallabagClient, fullURL string) (*http.Request, error) {
 	return http.NewRequest(
 		http.MethodGet,
 		fullURL,
@@ -103,7 +104,7 @@ func EntriesListRequest(w Wallabag, fullURL string) (*http.Request, error) {
 
 //EntriesFromURL fetch all entries from url
 func EntriesFromURL(
-	w Wallabag,
+	w WallabagClient,
 	entryListRequest *http.Request,
 	parser EntryListParser,
 ) (EntriesResponse, error) {

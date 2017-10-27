@@ -61,7 +61,7 @@ func (a AuthResponse) GetHeader() (string, error) {
 }
 
 //AuthQuery query wallabag backend for an auth token
-func AuthQuery(w *Wallabag, authRequest AuthRequest) error {
+func AuthQuery(w *WallabagClient, authRequest AuthRequest) error {
 
 	resp, err := w.Client.PostForm(w.URL+authPathURL, authRequest.GetURLValues())
 
