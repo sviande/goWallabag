@@ -1,0 +1,78 @@
+{
+    "page": 1,
+    "limit": 30,
+    "pages": 48,
+    "total": 1438,
+    "_links": {
+        "self": {
+            "href": "self"
+        },
+        "first": {
+            "href": "first"
+        },
+        "last": {
+            "href": "last"
+        },
+        "next": {
+            "href": "next"
+        }
+    },
+    "_embedded": {
+        "items": [
+            {
+                "is_archived": 1,
+                "is_starred": 0,
+                "user_name": "example",
+                "user_email": "example@gmail.com",
+                "user_id": 1,
+                "tags": [
+                    {
+                        "id": 3,
+                        "label": "Code",
+                        "slug": "code"
+                    }
+                ],
+                "id": 1788,
+                "title": "Title 1788",
+                "url": "https://blog.octo.com/le-demi-cercle-episode-3-communication-breakdown/",
+                "created_at": "2017-09-18T10:45:58+0200",
+                "updated_at": "2017-09-18T18:55:26+0200",
+                "annotations": [],
+                "mimetype": "text/html",
+                "language": "fr-FR",
+                "reading_time": 8,
+                "domain_name": "blog.octo.com",
+                "http_status": "200",
+                "_links": {
+                    "self": {
+                        "href": "/api/entries/1788"
+                    }
+                }
+            },
+            {
+                "is_archived": 0,
+                "is_starred": 1,
+                "user_name": "example",
+                "user_email": "example@gmail.com",
+                "user_id": 1,
+                "tags": [],
+                "id": 1787,
+                "title": "Le demi-cercle (\u00e9pisode 2 \u2014 Voir / Avancer)",
+                "url": "https://blog.octo.com/le-demi-cercle-episode-2-voir-avancer/",
+                "created_at": "2017-09-18T10:45:49+0200",
+                "updated_at": "2017-09-18T18:47:44+0200",
+                "annotations": [],
+                "mimetype": "text/html",
+                "language": "fr-FR",
+                "reading_time": 8,
+                "domain_name": "blog.octo.com",
+                "http_status": "200",
+                "_links": {
+                    "self": {
+                        "href": "/api/entries/1787"
+                    }
+                }
+            }
+        ]
+    }
+}
