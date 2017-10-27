@@ -1,68 +1,42 @@
 package goWallabag
 
 import (
-	"encoding/json"
 	"github.com/pkg/errors"
-	"io"
-	"log"
 	"net/http"
 )
 
 //Wallabag struct use for save authResponse, API URL and httpClient
 type Wallabag struct {
-	Client http.Client
-	URL    string
-	auth   AuthResponse
+	Client WallabagClient
 }
 
-//Do func use for execute a request on API, need authResponse for token generation
-func (w Wallabag) Do(r *http.Request) (*http.Response, error) {
-	if (w.auth == AuthResponse{}) {
-		return nil, errors.New("No auth token please run AuthQuery before")
+//NewWallabag create new struct
+func NewWallabag(URL string, client *http.Client) Wallabag {
+	return Wallabag{
+		Client: WallabagClient{
+			URL:    URL,
+			Client: client,
+		},
 	}
-
-	header, err := w.auth.GetHeader()
-
-	if err != nil {
-		return nil, err
-	}
-
-	r.Header.Set("Authorization", header)
-
-	resp, err := w.Client.Do(r)
-
-	if err != nil {
-		return nil, errors.Wrap(err, "Error durring request")
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, w.ParseError(resp.StatusCode, resp.Body)
-	}
-
-	return resp, nil
 }
 
-//ParseError func use for parsing error from API
-func (w Wallabag) ParseError(statusCode int, readCloser io.ReadCloser) error {
-	defer deferClose(readCloser)
-
-	errorResponse := ErrorResponse{}
-	err := json.NewDecoder(readCloser).Decode(&errorResponse)
-
-	if err != nil {
-		return errors.Wrap(err, "Failed to parse error response")
-	}
-
-	return errors.Errorf(
-		"Return status code: %v with message:\n %v",
-		statusCode,
-		errorResponse,
-	)
+//Auth User
+func (w *Wallabag) Auth(request AuthRequest) error {
+	return AuthQuery(&w.Client, request)
 }
 
-func deferClose(c io.Closer) {
-	err := c.Close()
+//GetEntryList retrieves entries from params
+func (w Wallabag) GetEntryList(params ...ParamsSetter) (EntriesResponse, error) {
+	URL := EntriesGetURL(w.Client, params...)
+	return w.GetEntryListFromURL(URL)
+}
+
+//GetEntryListFromURL retrieve entries from url
+func (w Wallabag) GetEntryListFromURL(URL string) (EntriesResponse, error) {
+	request, err := EntriesListRequest(w.Client, URL)
 	if err != nil {
-		log.Println(errors.Wrap(err, "Failed to close a resourcer"))
+		return EntriesResponse{}, errors.Wrap(err, "Error on GetEntryList")
 	}
+
+	return EntriesFromURL(w.Client, request, EntryListDefaultParser)
 }
