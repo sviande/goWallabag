@@ -41,6 +41,16 @@ func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
 	return EntriesFromURL(w.Client, request, EntriesDefaultParser)
 }
 
+//GetTags retrives all tags
+func (w Wallabag) GetTags() ([]Tag, error) {
+	request, err := TagsRequest(w.Client)
+	if err != nil {
+		return nil, errors.Wrap(err, "Failed to create request for tags")
+	}
+
+	return GetTags(w.Client, request)
+}
+
 //GetVersion retrieve version
 func (w Wallabag) GetVersion() (string, error) {
 	request, err := VersionRequest(w.Client)
