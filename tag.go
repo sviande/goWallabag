@@ -23,19 +23,19 @@ func parseTags(reader io.Reader) ([]Tag, error) {
 	return tags, errors.Wrap(err, "Failed to parse tags")
 }
 
-//GetTags fetch tag list from API
-func GetTags(w WallabagClient) ([]Tag, error) {
-	tagRequest, err := http.NewRequest(
+//TagsRequest create an http request for tags
+func TagsRequest(w WallabagClient) (*http.Request, error) {
+	return http.NewRequest(
 		http.MethodGet,
 		w.URL+tagsPathURL,
 		nil,
 	)
 
-	if err != nil {
-		return nil, errors.New("Failed to create request")
-	}
+}
 
-	resp, err := w.Do(tagRequest)
+//GetTags fetch tag list from API
+func GetTags(w WallabagClient, tagsRequest *http.Request) ([]Tag, error) {
+	resp, err := w.Do(tagsRequest)
 
 	defer deferClose(resp.Body)
 

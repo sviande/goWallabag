@@ -36,6 +36,23 @@ func TestParseTags(t *testing.T) {
 	}
 }
 
+func TestTagsRequest(t *testing.T) {
+	client := WallabagClient{
+		URL: "wallabagUrl/",
+	}
+
+	request, err := TagsRequest(client)
+	if err != nil {
+		t.Error("Failed to create tag request")
+	}
+
+	want := "wallabagUrl/api/tags.json"
+	got := request.URL.String()
+	if got != want {
+		t.Errorf("TestTagsRequest error got: %v, want: %v", got, want)
+	}
+}
+
 func getWantedTag() []Tag {
 	return []Tag{
 		Tag{
