@@ -25,20 +25,20 @@ func (w *Wallabag) Auth(request AuthRequest) error {
 	return AuthQuery(&w.Client, request)
 }
 
-//GetEntryList retrieves entries from params
-func (w Wallabag) GetEntryList(params ...ParamsSetter) (EntriesResponse, error) {
+//GetEntries retrieve entries from params
+func (w Wallabag) GetEntries(params ...ParamsSetter) (EntriesResponse, error) {
 	URL := EntriesGetURL(w.Client, params...)
-	return w.GetEntryListFromURL(URL)
+	return w.GetEntriesFromURL(URL)
 }
 
-//GetEntryListFromURL retrieve entries from url
-func (w Wallabag) GetEntryListFromURL(URL string) (EntriesResponse, error) {
-	request, err := EntriesListRequest(w.Client, URL)
+//GetEntriesFromURL retrieve entries from url
+func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
+	request, err := EntriesRequest(w.Client, URL)
 	if err != nil {
-		return EntriesResponse{}, errors.Wrap(err, "Error on GetEntryList")
+		return EntriesResponse{}, errors.Wrap(err, "Error on GetEntriesFromUrl")
 	}
 
-	return EntriesFromURL(w.Client, request, EntryListDefaultParser)
+	return EntriesFromURL(w.Client, request, EntriesDefaultParser)
 }
 
 //GetVersion retrieve version

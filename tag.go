@@ -14,24 +14,17 @@ type Tag struct {
 	Slug  string `json:"slug"`
 }
 
-//TagList reprensent a array of Tag
-type TagList []Tag
-
 const tagsPathURL = "api/tags.json"
 
-func parseTagList(reader io.Reader) (TagList, error) {
-	tagList := TagList{}
-	err := json.NewDecoder(reader).Decode(&tagList)
+func parseTags(reader io.Reader) ([]Tag, error) {
+	tags := make([]Tag, 0)
+	err := json.NewDecoder(reader).Decode(&tags)
 
-	if err != nil {
-		return TagList{}, err
-	}
-
-	return tagList, nil
+	return tags, errors.Wrap(err, "Failed to parse tags")
 }
 
-//GetTagList fetch tag list from API
-func GetTagList(w WallabagClient) (TagList, error) {
+//GetTags fetch tag list from API
+func GetTags(w WallabagClient) ([]Tag, error) {
 	tagRequest, err := http.NewRequest(
 		http.MethodGet,
 		w.URL+tagsPathURL,
@@ -39,7 +32,7 @@ func GetTagList(w WallabagClient) (TagList, error) {
 	)
 
 	if err != nil {
-		return TagList{}, errors.New("Failed to create request")
+		return nil, errors.New("Failed to create request")
 	}
 
 	resp, err := w.Do(tagRequest)
@@ -47,8 +40,8 @@ func GetTagList(w WallabagClient) (TagList, error) {
 	defer deferClose(resp.Body)
 
 	if err != nil {
-		return TagList{}, errors.Wrap(err, "Failed to retrieve response")
+		return nil, errors.Wrap(err, "Failed to retrieve response")
 	}
 
-	return parseTagList(resp.Body)
+	return parseTags(resp.Body)
 }

@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+//WallabagClient struct used for requesting API
 type WallabagClient struct {
 	Client *http.Client
 	URL    string

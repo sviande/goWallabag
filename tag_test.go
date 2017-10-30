@@ -16,7 +16,7 @@ func TestParseTags(t *testing.T) {
 		return
 	}
 
-	got, err := parseTagList(bytes.NewReader(in))
+	got, err := parseTags(bytes.NewReader(in))
 	if err != nil {
 		t.Errorf("err %s", err)
 		return
@@ -28,7 +28,7 @@ func TestParseTags(t *testing.T) {
 		t.Errorf("Parse() got \n%q, want\n%q", got, want)
 	}
 
-	_, err = parseTagList(strings.NewReader("asd"))
+	_, err = parseTags(strings.NewReader("asd"))
 
 	if err == nil {
 		t.Errorf("err %s", err)
@@ -36,8 +36,8 @@ func TestParseTags(t *testing.T) {
 	}
 }
 
-func getWantedTag() TagList {
-	return TagList{
+func getWantedTag() []Tag {
+	return []Tag{
 		Tag{
 			ID:    8,
 			Label: "Agile",

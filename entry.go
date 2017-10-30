@@ -46,7 +46,7 @@ type Entry struct {
 	UserName    string   `json:"user_name"`
 	UserEmail   string   `json:"user_email"`
 	UserID      int      `json:"user_id"`
-	Tags        TagList  `json:"tags"`
+	Tags        []Tag    `json:"tags"`
 	ID          int      `json:"id"`
 	Title       string   `json:"title"`
 	URL         string   `json:"url"`
@@ -62,14 +62,11 @@ type Entry struct {
 	Links       Links    `json:"_links"`
 }
 
-//EntriesRequest represent query var for request
-type EntriesRequest url.Values
+//EntriesParser function interface for parsing API response
+type EntriesParser func(io.Reader) (EntriesResponse, error)
 
-//EntryListParser function interface for parsing API response
-type EntryListParser func(io.Reader) (EntriesResponse, error)
-
-//EntryListDefaultParser parse Entries response from io.Reader
-func EntryListDefaultParser(reader io.Reader) (EntriesResponse, error) {
+//EntriesDefaultParser parse Entries response from io.Reader
+func EntriesDefaultParser(reader io.Reader) (EntriesResponse, error) {
 	entries := EntriesResponse{}
 	err := json.NewDecoder(reader).Decode(&entries)
 
@@ -93,8 +90,8 @@ func EntriesGetURL(w WallabagClient, options ...ParamsSetter) string {
 	return fullURL
 }
 
-//EntriesListRequest create an http request for fetching entries from API
-func EntriesListRequest(w WallabagClient, fullURL string) (*http.Request, error) {
+//EntriesRequest create an http request for fetching entries from API
+func EntriesRequest(w WallabagClient, fullURL string) (*http.Request, error) {
 	return http.NewRequest(
 		http.MethodGet,
 		fullURL,
@@ -106,7 +103,7 @@ func EntriesListRequest(w WallabagClient, fullURL string) (*http.Request, error)
 func EntriesFromURL(
 	w WallabagClient,
 	entryListRequest *http.Request,
-	parser EntryListParser,
+	parser EntriesParser,
 ) (EntriesResponse, error) {
 	resp, err := w.Do(entryListRequest)
 
