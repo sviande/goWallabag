@@ -40,3 +40,13 @@ func (w Wallabag) GetEntryListFromURL(URL string) (EntriesResponse, error) {
 
 	return EntriesFromURL(w.Client, request, EntryListDefaultParser)
 }
+
+//GetVersion retrieve version
+func (w Wallabag) GetVersion() (string, error) {
+	request, err := VersionRequest(w.Client)
+	if err != nil {
+		return "", errors.Wrap(err, "Failed to create request for version")
+	}
+
+	return VersionFetch(w.Client, request)
+}
