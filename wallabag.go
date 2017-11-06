@@ -38,7 +38,7 @@ func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
 		return EntriesResponse{}, errors.Wrap(err, "Error on GetEntriesFromUrl")
 	}
 
-	return EntriesFromURL(w.Client, request, EntriesDefaultParser)
+	return EntriesFromRequest(w.Client, request, EntriesDefaultParser)
 }
 
 //GetTags retrives all tags

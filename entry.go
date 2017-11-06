@@ -99,8 +99,8 @@ func EntriesRequest(w WallabagClient, fullURL string) (*http.Request, error) {
 	)
 }
 
-//EntriesFromURL fetch all entries from url
-func EntriesFromURL(
+//EntriesFromRequest fetch all entries from url
+func EntriesFromRequest(
 	w WallabagClient,
 	entryListRequest *http.Request,
 	parser EntriesParser,
