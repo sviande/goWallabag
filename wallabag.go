@@ -41,6 +41,26 @@ func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
 	return EntriesFromRequest(w.Client, request, EntriesDefaultParser)
 }
 
+//EntryExists retrieve entry exists with one url
+func (w Wallabag) EntryExists(params ...ParamsSetter) (EntryExists, error) {
+	request, err := EntryExistsRequest(w.Client, params...)
+	if err != nil {
+		return EntryExists{}, errors.Wrap(err, "Failed to create request for entry exists")
+	}
+
+	return EntryExistsFromRequest(w.Client, request, EntryExistsDefaultParser)
+}
+
+//EntriesExists retrieve entry exists with multiple urls
+func (w Wallabag) EntriesExists(params ...ParamsSetter) (EntriesExists, error) {
+	request, err := EntryExistsRequest(w.Client, params...)
+	if err != nil {
+		return EntriesExists{}, errors.Wrap(err, "Failed to create request for entries exists")
+	}
+
+	return EntriesExistsFromRequest(w.Client, request, EntriesExistsDefaultParser)
+}
+
 //GetTags retrives all tags
 func (w Wallabag) GetTags() ([]Tag, error) {
 	request, err := TagsRequest(w.Client)
