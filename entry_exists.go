@@ -42,6 +42,9 @@ type EntriesExists map[string]bool
 func EntryExistsRequest(w WallabagClient, options ...ParamsSetter) (*http.Request, error) {
 	params := url.Values{}
 	for _, opt := range options {
+		if opt == nil {
+			continue
+		}
 		opt(&params)
 	}
 
