@@ -82,6 +82,9 @@ func EntriesGetURL(w WallabagClient, options ...ParamsSetter) string {
 
 	params := url.Values{}
 	for _, opt := range options {
+		if opt == nil {
+			continue
+		}
 		opt(&params)
 	}
 
