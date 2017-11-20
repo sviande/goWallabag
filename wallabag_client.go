@@ -33,11 +33,15 @@ func (w WallabagClient) Do(r *http.Request) (*http.Response, error) {
 	resp, err := w.Client.Do(r)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "Error durring request")
+		return nil, errors.Wrapf(
+			err,
+			"Error durring request on URL %v:", r.URL.String(),
+		)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, w.ParseError(resp.StatusCode, resp.Body)
+		parsedError := w.ParseError(resp.StatusCode, resp.Body)
+		return nil, parsedError
 	}
 
 	return resp, nil

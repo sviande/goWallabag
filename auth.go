@@ -71,7 +71,8 @@ func AuthQuery(w *WallabagClient, authRequest AuthRequest) error {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return w.ParseError(resp.StatusCode, resp.Body)
+		parsedError := w.ParseError(resp.StatusCode, resp.Body)
+		return parsedError
 	}
 
 	defer deferClose(resp.Body)
