@@ -40,36 +40,20 @@ func TestURLsParams(t *testing.T) {
 	}
 }
 
-func TestEntryExistsRequest(t *testing.T) {
-	client := WallabagClient{
-		URL: "test.wallabag/",
-	}
+func TestEntryExistsURLWithParams(t *testing.T) {
+	got := EntryExistsURLWithParams(nil)
 
-	request, err := EntryExistsRequest(client, nil)
-
-	if err != nil {
-		t.Error("Error on entry exists request")
-		return
-	}
-
-	want := "test.wallabag/api/entries/exists.json?"
-	got := request.URL.String()
+	want := "api/entries/exists.json?"
 	if got != want {
 		t.Errorf("Entry Exists request failed want: %v got %v", want, got)
 		return
 	}
 
-	request, err = EntryExistsRequest(client, func(values *url.Values) {
+	got = EntryExistsURLWithParams(func(values *url.Values) {
 		values.Add("test", "param")
 	})
 
-	if err != nil {
-		t.Error("Error on entry exists request")
-		return
-	}
-
-	want = "test.wallabag/api/entries/exists.json?test=param"
-	got = request.URL.String()
+	want = "api/entries/exists.json?test=param"
 	if got != want {
 		t.Errorf("Entry Exists request failed want: %v got %v", want, got)
 		return

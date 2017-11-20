@@ -8,7 +8,8 @@ import (
 	"net/url"
 )
 
-const entryExistsURL = "api/entries/exists.json"
+//EntryExistsURL url path for entries
+const EntryExistsURL = "api/entries/exists.json"
 
 //EntryExitsParams struct use as namespace for entry exits params
 type EntryExitsParams struct {
@@ -38,8 +39,8 @@ type EntryExists struct {
 //EntriesExists reprensent list of url with boolean
 type EntriesExists map[string]bool
 
-//EntryExistsRequest create request on entryExists
-func EntryExistsRequest(w WallabagClient, options ...ParamsSetter) (*http.Request, error) {
+//EntryExistsURLWithParams create request on entryExists
+func EntryExistsURLWithParams(options ...ParamsSetter) string {
 	params := url.Values{}
 	for _, opt := range options {
 		if opt == nil {
@@ -48,13 +49,7 @@ func EntryExistsRequest(w WallabagClient, options ...ParamsSetter) (*http.Reques
 		opt(&params)
 	}
 
-	fullURL := w.URL + entryExistsURL + "?" + params.Encode()
-
-	return http.NewRequest(
-		http.MethodGet,
-		fullURL,
-		nil,
-	)
+	return EntryExistsURL + "?" + params.Encode()
 }
 
 //EntryExistsParser func interface for entry exists parser

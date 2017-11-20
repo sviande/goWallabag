@@ -14,8 +14,9 @@ type Wallabag struct {
 func NewWallabag(URL string, client *http.Client) Wallabag {
 	return Wallabag{
 		Client: WallabagClient{
-			URL:    URL,
-			Client: client,
+			URL:        URL,
+			Client:     client,
+			NewRequest: http.NewRequest,
 		},
 	}
 }
@@ -27,13 +28,13 @@ func (w *Wallabag) Auth(request AuthRequest) error {
 
 //GetEntries retrieve entries from params
 func (w Wallabag) GetEntries(params ...ParamsSetter) (EntriesResponse, error) {
-	URL := EntriesGetURL(w.Client, params...)
-	return w.GetEntriesFromURL(URL)
+	URL := EntriesGetURL(params...)
+	return w.GetEntriesFromURL(w.Client.URL + URL)
 }
 
 //GetEntriesFromURL retrieve entries from url
 func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
-	request, err := EntriesRequest(w.Client, URL)
+	request, err := w.Client.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
 		return EntriesResponse{}, errors.Wrap(err, "Error on GetEntriesFromUrl")
 	}
@@ -43,7 +44,8 @@ func (w Wallabag) GetEntriesFromURL(URL string) (EntriesResponse, error) {
 
 //EntryExists retrieve entry exists with one url
 func (w Wallabag) EntryExists(params ...ParamsSetter) (EntryExists, error) {
-	request, err := EntryExistsRequest(w.Client, params...)
+	URL := EntryExistsURLWithParams(params...)
+	request, err := http.NewRequest(http.MethodGet, w.Client.URL+URL, nil)
 	if err != nil {
 		return EntryExists{}, errors.Wrap(err, "Failed to create request for entry exists")
 	}
@@ -53,7 +55,8 @@ func (w Wallabag) EntryExists(params ...ParamsSetter) (EntryExists, error) {
 
 //EntriesExists retrieve entry exists with multiple urls
 func (w Wallabag) EntriesExists(params ...ParamsSetter) (EntriesExists, error) {
-	request, err := EntryExistsRequest(w.Client, params...)
+	URL := EntryExistsURLWithParams(params...)
+	request, err := http.NewRequest(http.MethodGet, w.Client.URL+URL, nil)
 	if err != nil {
 		return EntriesExists{}, errors.Wrap(err, "Failed to create request for entries exists")
 	}
@@ -63,7 +66,7 @@ func (w Wallabag) EntriesExists(params ...ParamsSetter) (EntriesExists, error) {
 
 //GetTags retrives all tags
 func (w Wallabag) GetTags() ([]Tag, error) {
-	request, err := TagsRequest(w.Client)
+	request, err := w.Client.NewRequest(http.MethodGet, w.Client.URL+TagsPathURL, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to create request for tags")
 	}
@@ -73,7 +76,7 @@ func (w Wallabag) GetTags() ([]Tag, error) {
 
 //GetVersion retrieve version
 func (w Wallabag) GetVersion() (string, error) {
-	request, err := VersionRequest(w.Client)
+	request, err := w.Client.NewRequest(http.MethodGet, w.Client.URL+VersionPathURL, nil)
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to create request for version")
 	}

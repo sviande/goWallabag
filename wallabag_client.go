@@ -10,9 +10,10 @@ import (
 
 //WallabagClient struct used for requesting API
 type WallabagClient struct {
-	Client *http.Client
-	URL    string
-	auth   AuthResponse
+	Client     *http.Client
+	URL        string
+	auth       AuthResponse
+	NewRequest func(string, string, io.Reader) (*http.Request, error)
 }
 
 //Do func use for execute a request on API, need authResponse for token generation
@@ -32,11 +33,15 @@ func (w WallabagClient) Do(r *http.Request) (*http.Response, error) {
 	resp, err := w.Client.Do(r)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "Error durring request")
+		return nil, errors.Wrapf(
+			err,
+			"Error durring request on URL %v:", r.URL.String(),
+		)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, w.ParseError(resp.StatusCode, resp.Body)
+		parsedError := w.ParseError(resp.StatusCode, resp.Body)
+		return nil, parsedError
 	}
 
 	return resp, nil
