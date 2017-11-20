@@ -14,8 +14,9 @@ type Wallabag struct {
 func NewWallabag(URL string, client *http.Client) Wallabag {
 	return Wallabag{
 		Client: WallabagClient{
-			URL:    URL,
-			Client: client,
+			URL:        URL,
+			Client:     client,
+			NewRequest: http.NewRequest,
 		},
 	}
 }
