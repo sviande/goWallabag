@@ -10,9 +10,10 @@ import (
 
 //WallabagClient struct used for requesting API
 type WallabagClient struct {
-	Client *http.Client
-	URL    string
-	auth   AuthResponse
+	Client     *http.Client
+	URL        string
+	auth       AuthResponse
+	NewRequest func(string, string, io.Reader) (*http.Request, error)
 }
 
 //Do func use for execute a request on API, need authResponse for token generation
