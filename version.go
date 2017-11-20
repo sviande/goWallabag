@@ -7,22 +7,14 @@ import (
 	"net/http"
 )
 
-const versionPathURL = "api/version.json"
+//VersionPathURL url path for version
+const VersionPathURL = "api/version.json"
 
 func parseVersion(reader io.Reader) (string, error) {
 	version := ""
 	err := json.NewDecoder(reader).Decode(&version)
 
 	return version, err
-}
-
-//VersionRequest generate http.Request for fetching version from API
-func VersionRequest(w WallabagClient) (*http.Request, error) {
-	return http.NewRequest(
-		http.MethodGet,
-		w.URL+versionPathURL,
-		nil,
-	)
 }
 
 //VersionFetch fetch version API

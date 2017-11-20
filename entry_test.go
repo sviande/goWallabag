@@ -3,7 +3,6 @@ package goWallabag
 import (
 	"bytes"
 	"io/ioutil"
-	"net/http"
 	"net/url"
 	"reflect"
 	"strings"
@@ -38,46 +37,21 @@ func TestParseEntries(t *testing.T) {
 }
 
 func TestEntriesGetUrl(t *testing.T) {
-	client := WallabagClient{
-		URL: "test.wallabag/",
-	}
-
-	got := EntriesGetURL(client, nil)
-	want := "test.wallabag/api/entries.json?"
+	got := EntriesGetURL(nil)
+	want := "api/entries.json?"
 	if got != want {
 		t.Errorf("Entry get url failed want: %v got %v", want, got)
 		return
 	}
 
-	got = EntriesGetURL(client, func(values *url.Values) {
+	got = EntriesGetURL(func(values *url.Values) {
 		values.Add("test", "param")
 	})
 
-	want = "test.wallabag/api/entries.json?test=param"
+	want = "api/entries.json?test=param"
 	if got != want {
 		t.Errorf("Entry get url failed want: %v got %v", want, got)
 		return
-	}
-}
-
-func TestEntriesRequest(t *testing.T) {
-	client := WallabagClient{
-		URL: "test.wallabag/",
-	}
-
-	req, err := EntriesRequest(client, "url")
-	if err != nil {
-		t.Error("Entries Request must not failed")
-	}
-
-	if req.Method != http.MethodGet {
-		t.Error("Entries Request must use get http method")
-	}
-
-	want := "url"
-	got := req.URL.String()
-	if got != want {
-		t.Errorf("Entries Request url want: %v got: %v", want, got)
 	}
 }
 

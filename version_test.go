@@ -27,20 +27,3 @@ func TestParseVersion(t *testing.T) {
 		return
 	}
 }
-
-func TestVersionRequest(t *testing.T) {
-	client := WallabagClient{
-		URL: "test.wallabag/",
-	}
-
-	req, err := VersionRequest(client)
-	if err != nil {
-		t.Errorf("Version get request failed %v", err)
-	}
-	want := "test.wallabag/api/version.json"
-	got := req.URL.String()
-	if got != want {
-		t.Errorf("Entry get url failed want: %v got %v", want, got)
-		return
-	}
-}

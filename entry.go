@@ -8,7 +8,8 @@ import (
 	"net/url"
 )
 
-const entryGetAllPathURL = "api/entries.json"
+//EntryGetAllPathURL url path for entries
+const EntryGetAllPathURL = "api/entries.json"
 
 //EntriesResponse represent struct for wallabag response
 //Response with pagination
@@ -78,7 +79,7 @@ func EntriesDefaultParser(reader io.Reader) (EntriesResponse, error) {
 }
 
 //EntriesGetURL return url for get Entries with query
-func EntriesGetURL(w WallabagClient, options ...ParamsSetter) string {
+func EntriesGetURL(options ...ParamsSetter) string {
 
 	params := url.Values{}
 	for _, opt := range options {
@@ -88,18 +89,7 @@ func EntriesGetURL(w WallabagClient, options ...ParamsSetter) string {
 		opt(&params)
 	}
 
-	fullURL := w.URL + entryGetAllPathURL + "?" + params.Encode()
-
-	return fullURL
-}
-
-//EntriesRequest create an http request for fetching entries from API
-func EntriesRequest(w WallabagClient, fullURL string) (*http.Request, error) {
-	return http.NewRequest(
-		http.MethodGet,
-		fullURL,
-		nil,
-	)
+	return EntryGetAllPathURL + "?" + params.Encode()
 }
 
 //EntriesFromRequest fetch all entries from url
