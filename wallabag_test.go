@@ -61,3 +61,19 @@ func TestVersionFetchError(t *testing.T) {
 		t.Errorf("Missing error")
 	}
 }
+
+func TestAuthQueryFailed(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(400)
+	}))
+	defer ts.Close()
+
+	wallabag := NewWallabag(ts.URL+"/", &http.Client{})
+	req := AuthRequest{}
+	got := AuthQuery(&wallabag.Client, req)
+	want := "Failed to parse error response: EOF"
+
+	if got.Error() != want {
+		t.Errorf("Error auth got: %v want %v", got, want)
+	}
+}
