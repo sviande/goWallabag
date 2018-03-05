@@ -68,6 +68,6 @@ func (w WallabagClient) ParseError(statusCode int, readCloser io.ReadCloser) err
 func deferClose(c io.Closer) {
 	err := c.Close()
 	if err != nil {
-		log.Println(errors.Wrap(err, "Failed to close a resourcer"))
+		log.Println(errors.Wrap(err, "Failed to close a resource"))
 	}
 }
