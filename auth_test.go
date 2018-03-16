@@ -1,6 +1,8 @@
 package goWallabag
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
@@ -53,5 +55,61 @@ func TestGetHeader(t *testing.T) {
 	got, _ := authResponse.GetHeader()
 	if expected != got {
 		t.Errorf("Failed for auth GetHeader expected %v got %v", expected, got)
+	}
+}
+
+func TestAuthQueryHttpFailed(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(400)
+	}))
+
+	wallabag := NewWallabag(ts.URL+"/", ts.Client())
+	req := AuthRequest{}
+	got := AuthQuery(&wallabag.Client, req)
+	want := "Failed to parse error response: EOF"
+
+	if got.Error() != want {
+		t.Errorf("Error auth got: %v want %v", got, want)
+	}
+
+	ts.Close()
+	got = AuthQuery(&wallabag.Client, req)
+	if got == nil {
+		t.Error("Error auth must return an error")
+	}
+}
+
+func TestAuthQueryJsonFailed(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		_, _ = w.Write([]byte("error wanted for json"))
+	}))
+
+	defer ts.Close()
+
+	wallabag := NewWallabag(ts.URL+"/", ts.Client())
+	req := AuthRequest{}
+	got := AuthQuery(&wallabag.Client, req)
+	want := "Auth Failed from json decode: invalid character 'e' looking for beginning of value"
+
+	if got.Error() != want {
+		t.Errorf("Error auth got: %v want %v", got, want)
+	}
+}
+
+func TestAuthQuerySuccess(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		_, _ = w.Write([]byte("{}"))
+	}))
+
+	defer ts.Close()
+
+	wallabag := NewWallabag(ts.URL+"/", ts.Client())
+	req := AuthRequest{}
+	got := AuthQuery(&wallabag.Client, req)
+
+	if got != nil {
+		t.Errorf("Error auth got non nil value.")
 	}
 }
